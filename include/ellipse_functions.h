@@ -5,6 +5,7 @@
 #define ELLIPSE_FUNCTIONS_H
 
 std::vector<double> polar_to_cartesian(double r, double theta);
+std::vector<double> cartesian_to_polar(double x, double y);
 double eccentricity (double a, double b);
 double r(double theta, double a, double b, double alpha=0);
 

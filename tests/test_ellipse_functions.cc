@@ -10,12 +10,15 @@
 
 int main(){
 
-	/* test conversion */
+	/* test conversions */
 	double rad, theta; std::vector<double> conv_result;
 	
 	rad = 10 ; theta = M_PI/3;
 	conv_result = polar_to_cartesian(rad, theta);
 	if (int(conv_result[0]) != 5) {print_error_message("polar_to_cartesian conversion", 5, conv_result[0]);}
+
+	conv_result = cartesian_to_polar(conv_result[0], conv_result[1]);
+	if ( abs(conv_result[0]-10) > 0.1 ){print_error_message("cartesian_to_polar conversion", 10, conv_result[0]);}
 
 	/* test eccentricity */
 	double a, b, ecc, exp_ecc;

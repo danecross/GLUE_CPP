@@ -13,6 +13,11 @@ std::vector<double> polar_to_cartesian(double r, double theta){
 
 }
 
+std::vector<double> cartesian_to_polar(double x, double y){
+	
+	std::vector<double> coords {sqrt(x*x + y*y), atan(y/x)};
+	return coords;
+}
 
 double eccentricity (double a, double b){ return sqrt(1-pow(a/b, 2));}
 
