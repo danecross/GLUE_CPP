@@ -1,8 +1,12 @@
 
+#include <Eigen/Dense>
+#include <Eigen/Geometry>
+
 #include <vector>
 #include <string>
 #include <iostream>
-
+#include <fstream>
+#include <stdio.h>
 
 std::vector<double> linspace(double start, double end, int num)
 {
@@ -44,7 +48,20 @@ std::vector<std::vector<double> > cartesian_product( std::vector<double> x, std:
 }
 
 
+void save_coords(std::vector<std::vector<double> > p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string name){
 
+	std::ofstream saveCoords("basic_data_and_plots/data/coords_"+name+".csv");
+        for ( auto coord : p ){
+                saveCoords << coord[0] << ", " << coord[1] << std::endl;
+        }   
+        saveCoords.close();
+
+        std::ofstream saveEig("basic_data_and_plots/data/eigenresults_"+name+".csv");
+        saveEig << "eigenvalues: " << solver.eigenvalues() << std::endl;
+        saveEig << "eigenvectors: " << solver.eigenvectors() << std::endl;
+        saveEig.close();
+
+}
 
 void print_error_message(std::string test_name, double expected_value, double actual_value){
 
