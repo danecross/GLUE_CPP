@@ -46,7 +46,6 @@ for i in range(40):
     eigen_path = "data/eigenresults_%i.csv"%i
 
     if not os.path.exists(coords_path) or not os.path.exists(eigen_path):
-        print(coords_path, eigen_path)
         continue
 
     plot_coords(coords_path)
