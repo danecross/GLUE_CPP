@@ -1,6 +1,4 @@
 
-#define DEBUG
-
 #include <vector>
 #include <iostream>
 #include <random>
@@ -19,19 +17,20 @@
 int test_get_stars(){
 
 	std::vector<std::vector<double> > p = {{0, 1}, {0, 2}, {0, 3}, {0, 4}};
-        std::vector<std::vector<double> > p_new;
+        std::vector<std::vector<double> >* p_new;
+	auto p_ptr = &p;
 
         // test null selection
-        p_new = get_stars(p);
-        if (p_new.size() != 4 ){print_error_message("get_stars null selection", 4, p_new.size());}
+        p_new = get_stars(p_ptr);
+        if (p_new->size() != 4 ){print_error_message("get_stars null selection", 4, p_new->size());}
 
         // test shell selection
-        p_new = get_stars(p, 0.0, 0.4);
-        if (p_new.size() != 2) { print_error_message("get_stars, shell selection (basic)", 2, p_new.size());}
+        p_new = get_stars(p_ptr, 0.0, 0.4);
+        if (p_new->size() != 2) { print_error_message("get_stars, shell selection (basic)", 2, p_new->size());}
 
         // test shell selection with half-mass-radius
-        p_new = get_stars(p, 0.0, 0.5, 10);
-        if (p_new.size() != 4){print_error_message("get_stars, shell selection w/ hmr", 4, p_new.size()); return 0;}
+        p_new = get_stars(p_ptr, 0.0, 0.5, 10);
+        if (p_new->size() != 4){print_error_message("get_stars, shell selection w/ hmr", 4, p_new->size()); return 0;}
 
 	return 1;
 
@@ -79,12 +78,12 @@ int test_rotate_coords(){
 
 	std::vector<std::vector<double> > p = {{0, 1}, {0, 2}, {0, 3}, {0, 4}};
         Eigen::MatrixXd m(2,2) ; m << 1,0,0,1;
-        std::vector<std::vector<double> > p_rot = rotate_coords(m, p);
+        std::vector<std::vector<double> >* p_rot = rotate_coords(m, &p);
 
         std::vector<std::vector<double> > p_exp = {{-1,0},{-2,0},{-3,0},{-4,0}};
 
-        if (p_exp[0][0]-p_rot[0][0] > 1e-5 || p_exp[2][1]-p_rot[2][1] > 1e-5){
-                std::cout << (p_exp[0][0]-p_rot[0][0]) << std::endl;
+        if (p_exp[0][0]-(*p_rot)[0][0] > 1e-5 || p_exp[2][1]-(*p_rot)[2][1] > 1e-5){
+                std::cout << (p_exp[0][0]-(*p_rot)[0][0]) << std::endl;
                 print_error_message("coordinate rotation", "??", "??");
 		return 0;
         }
@@ -94,10 +93,10 @@ int test_rotate_coords(){
 
 int test_iterate(){
 
-	// generate random dsitribution
+	// generate random distribution
 	double a = 10.0 ; double b = 5.0 ;
 	std::vector<double> low, up; low = {0.1, 0.1} ; up = {a, b};
-	std::vector< std::vector<double> > p = create_const_shell(low, up, 5000);
+	std::vector< std::vector<double> >* p = create_const_shell(low, up, 5000);
 
 	// run iterate
 	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver = iterate(p);
@@ -131,6 +130,4 @@ int main() {
 	return EXIT_SUCCESS;
 
 }
-
-
 

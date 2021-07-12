@@ -15,7 +15,7 @@
 #include "helpers.h"
 
 
-Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> iterate(std::vector<std::vector<double> > p, int maxiter, double converge_radius){
+Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> iterate(std::vector<std::vector<double> >* p, int maxiter, double converge_radius){
 
 
 	Eigen::VectorXd M(2), M_last(2); Eigen::MatrixXd evecs, evecs_new; std::vector<double> q, q_last; 
@@ -49,19 +49,19 @@ Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> iterate(std::vector<std::vector<d
 
 }
 
-std::vector<std::vector<double> > rotate_coords( Eigen::MatrixXd evecs, std::vector<std::vector<double> > p){
+std::vector<std::vector<double> >* rotate_coords( Eigen::MatrixXd evecs, std::vector<std::vector<double> >* p){
 
 	Eigen::VectorXd x(2); x << 1,0;
 	auto v1 = evecs.col(0) ; auto v2 = evecs.col(1);
 	double alpha = std::min(acos(x.dot(v1)/(x.norm()*v1.norm())), acos(x.dot(v2)/(x.norm()*v2.norm())));
 
 	Eigen::VectorXd v(2); std::vector<double> coord;
-	for ( int i = 0 ; i < p.size() ; ++i ){
+	for ( int i = 0 ; i < p->size() ; ++i ){
 		
-		coord = p[i];
+		coord = (*p)[i];
 		v << coord[0], coord[1];
 		v = rotate_vector(v, alpha);
-		p[i][0] = v(0) ; p[i][1] = v(1);
+		(*p)[i][0] = v(0) ; (*p)[i][1] = v(1);
 	}
 
 	return p;
@@ -92,28 +92,28 @@ Eigen::VectorXd rotate_vector(Eigen::VectorXd v, double alpha){
 
 }
 
-std::vector<double> q_calc( std::vector< std::vector<double> > p, Eigen::VectorXd M){
+std::vector<double> q_calc( std::vector< std::vector<double> >* p, Eigen::VectorXd M){
 
 	std::vector<double> q;
 	double ab = sqrt(M[0]/M[1]);
 	
-	for ( auto coords : p ){
+	for ( auto coords : *p ){
 		q.push_back(sqrt(pow(coords[0], 2) + pow(coords[1]/ab, 2)));
 	}
 
 	return q;
 }
 
-Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> M_calc( std::vector<std::vector<double> > p, std::vector<double> q){
+Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> M_calc( std::vector<std::vector<double> >* p, std::vector<double> q){
 
 	Eigen::MatrixXd M(2,2); M << 0,0,0,0; 
 	
 	for ( int i = 0 ; i < q.size() ; ++i){
 	
-		M(0,0) += p[i][0]*p[i][0]/pow(q[i], 2);
-		M(1,0) += p[i][1]*p[i][0]/pow(q[i], 2);
-		M(0,1) += p[i][0]*p[i][1]/pow(q[i], 2);
-		M(1,1) += p[i][1]*p[i][1]/pow(q[i], 2);
+		M(0,0) += (*p)[i][0]*(*p)[i][0]/pow(q[i], 2);
+		M(1,0) += (*p)[i][1]*(*p)[i][0]/pow(q[i], 2);
+		M(0,1) += (*p)[i][0]*(*p)[i][1]/pow(q[i], 2);
+		M(1,1) += (*p)[i][1]*(*p)[i][1]/pow(q[i], 2);
 
 	}
 
@@ -125,9 +125,9 @@ Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> M_calc( std::vector<std::vector<d
 }
 
 
-std::vector<std::vector<double> > get_stars( std::vector<std::vector<double> > p, double lower_shell, double upper_shell, double radius){
+std::vector<std::vector<double> >* get_stars( std::vector<std::vector<double> >* p, double lower_shell, double upper_shell, double radius){
 
-	std::vector<std::vector<double> > p_new;
+	std::vector<std::vector<double> >* p_new;
 	std::vector<double> coord;
 	double upper_radius_cut, lower_radius_cut;
 
@@ -135,11 +135,11 @@ std::vector<std::vector<double> > get_stars( std::vector<std::vector<double> > p
 	else if (radius == 0){
 		
 		std::vector<double> radii; 
-		for ( auto c : p ){ radii.push_back(sqrt( pow(c[0],2) + pow(c[1], 2))); }
+		for ( auto c : *p ){ radii.push_back(sqrt( pow(c[0],2) + pow(c[1], 2))); }
 
 		// cut based on percentile
-		int upper_radius_index = int(upper_shell*p.size());
-		int lower_radius_index = int(lower_shell*p.size());
+		int upper_radius_index = int(upper_shell*p->size());
+		int lower_radius_index = int(lower_shell*p->size());
 
 		sort(radii.begin(), radii.end());
 		upper_radius_cut = radii[upper_radius_index];
@@ -152,11 +152,11 @@ std::vector<std::vector<double> > get_stars( std::vector<std::vector<double> > p
 	}
 
 	double r; 
-	for ( int i = 0 ; i < p.size() ; i++){
-		r = sqrt( pow(p[i][0],2) + pow(p[i][1], 2)) ;
+	for ( int i = 0 ; i < p->size() ; i++){
+		r = sqrt( pow((*p)[i][0],2) + pow((*p)[i][1], 2)) ;
 		if ( r <= upper_radius_cut && r >= lower_radius_cut ){
-			coord = {p[i][0], p[i][1]} ;
-			p_new.push_back(coord);
+			coord = {(*p)[i][0], (*p)[i][1]} ;
+			p_new->push_back(coord);
 		}
 	
 	}

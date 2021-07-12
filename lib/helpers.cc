@@ -32,13 +32,13 @@ std::vector<double> linspace(double start, double end, int num)
 }
 
 
-std::vector<std::vector<double> > cartesian_product( std::vector<double> x, std::vector<double> y){
+std::vector<std::vector<double> >* cartesian_product( std::vector<double> x, std::vector<double> y){
 
-        std::vector<std::vector<double> > p ; std::vector<double> coord;
+        std::vector<std::vector<double> >* p ; std::vector<double> coord;
         for ( int i = 0 ; i < x.size() ; ++i){
                 for (int j = 0 ; j < y.size() ; ++j){
                         coord.push_back(x[i]) ; coord.push_back(y[j]);
-                        p.push_back(coord);
+                        p->push_back(coord);
                         coord.clear();
                 }
         }
@@ -48,10 +48,10 @@ std::vector<std::vector<double> > cartesian_product( std::vector<double> x, std:
 }
 
 
-void save_coords(std::vector<std::vector<double> > p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string name){
+void save_coords(std::vector<std::vector<double> >* p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string name){
 
 	std::ofstream saveCoords("basic_data_and_plots/data/coords_"+name+".csv");
-        for ( auto coord : p ){
+        for ( auto coord : *p ){
                 saveCoords << coord[0] << ", " << coord[1] << std::endl;
         }   
         saveCoords.close();
@@ -63,8 +63,24 @@ void save_coords(std::vector<std::vector<double> > p, Eigen::SelfAdjointEigenSol
 
 }
 
+void save_coords(std::vector<std::vector<double> >* p, std::vector<double> lower_ellipse, std::vector<double> upper_ellipse, std::string name){
+
+	std::ofstream saveCoords("cds_data_and_plots/data/coords_"+name+".csv");
+        for ( auto coord : *p ){
+                saveCoords << coord[0] << ", " << coord[1] << std::endl;
+        }
+        saveCoords.close();
+
+	std::ofstream saveEllipses("cds_data_and_plots/data/ellipses_"+name+".csv");
+	saveEllipses << lower_ellipse[0] << " " << lower_ellipse[1] << " " << lower_ellipse[2] << std::endl;
+	saveEllipses << upper_ellipse[0] << " " << upper_ellipse[1] << " " << upper_ellipse[2] << std::endl;
+	saveEllipses.close();	
+
+}
+
 void print_error_message(std::string test_name, double expected_value, double actual_value){
 
+	std::cout << std::endl;
         std::cout << "WARNING: " << test_name << " FAILED" << std::endl;
         std::cout << "\tEXPECTED: " << expected_value << std::endl;
         std::cout << "\tRETURNED: " << actual_value << std::endl;
@@ -73,6 +89,7 @@ void print_error_message(std::string test_name, double expected_value, double ac
 
 void print_error_message(std::string test_name, std::string expected_value, std::string actual_value){
 
+	std::cout << std::endl;
         std::cout << "WARNING: " << test_name << " FAILED" << std::endl;
         std::cout << "\tEXPECTED: " << expected_value << std::endl;
         std::cout << "\tRETURNED: " << actual_value << std::endl;
