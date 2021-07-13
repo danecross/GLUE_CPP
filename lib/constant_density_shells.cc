@@ -51,11 +51,8 @@ void generate_guesses( std::vector<std::vector<double> >* guesses, std::vector<d
 
 std::vector<double> test_guesses (std::vector<std::vector<double> >* p, std::vector<double> lower_ellipse, double sep, std::vector<std::vector<double> > guesses){
 
-	auto one = high_resolution_clock::now();
 	std::vector<double> data_ratios = get_data_ratios(p, lower_ellipse, sep, guesses);
-	auto two = high_resolution_clock::now();
 	std::vector<double> const_ratios = get_const_ratios(p->size(), lower_ellipse, sep, guesses);
-	auto three = high_resolution_clock::now();
 
 	double diff, min_diff; int best_i; min_diff=INFINITY;
 	for ( int i = 0 ; i < data_ratios.size() ; ++i){
@@ -65,11 +62,6 @@ std::vector<double> test_guesses (std::vector<std::vector<double> >* p, std::vec
 			best_i = i;
 		}
 	}
-	auto four = high_resolution_clock::now();
-
-	std::cout << "get data ratios: "    << duration_cast<milliseconds>(two - one).count() << std::endl;
-	std::cout << "get const ratios: "   << duration_cast<milliseconds>(three - two).count() << std::endl;
-	std::cout << "get compare ratios: " << duration_cast<milliseconds>(four - three).count() << std::endl;
 
 	return guesses[best_i];
 }
@@ -94,10 +86,10 @@ std::vector<double> get_data_ratios(std::vector<std::vector<double> >* p, std::v
         	M1 = evals(0); M2 = evals(1);
 		ratios.push_back(sqrt(M1/M2));
 		
-		if ( i%1 == 0 ){
+		if ( i%100 == 0 ){
 			auto stop = high_resolution_clock::now();
-        		auto duration = duration_cast<seconds>(stop - start);
-			std::cout << "\ttest data iteration " << i << " of " << guesses.size() << " done in " << duration.count() << " seconds" << std::endl;
+        		auto duration = duration_cast<milliseconds>(stop - start);
+			std::cout << "\ttest data iteration " << i << " of " << guesses.size() << " done in " << duration.count() << " milliseconds" << std::endl;
 		}
 		i++; 
 
@@ -130,10 +122,10 @@ std::vector<double> get_const_ratios(int num_particles, std::vector<double> lowe
                 M1 = evals(0); M2 = evals(1);
                 ratios.push_back(sqrt(M1/M2));
 
-		if ( i%1 == 0 ){
+		if ( i%100 == 0 ){
 			auto stop = high_resolution_clock::now();
-        		auto duration = duration_cast<seconds>(stop - start);
-			std::cout << "\tconst shell iteration " << i << " of " << guesses.size() << " done in " << duration.count() << " seconds" << std::endl;
+        		auto duration = duration_cast<millliseconds>(stop - start);
+			std::cout << "\tconst shell iteration " << i << " of " << guesses.size() << " done in " << duration.count() << " milliseconds" << std::endl;
 		}
 		i++;
 
