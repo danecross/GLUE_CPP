@@ -125,49 +125,6 @@ Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> M_calc( std::vector<std::vector<d
 }
 
 
-std::vector<std::vector<double> >* get_stars( std::vector<std::vector<double> >* p, double lower_shell, double upper_shell, double radius){
-
-	std::vector<std::vector<double> >* p_new;
-	std::vector<double> coord;
-	double upper_radius_cut, lower_radius_cut;
-
-	if (radius == 0.0 && lower_shell==0.0 && upper_shell==1.0){return p;}
-	else if (radius == 0){
-		
-		std::vector<double> radii; 
-		for ( auto c : *p ){ radii.push_back(sqrt( pow(c[0],2) + pow(c[1], 2))); }
-
-		// cut based on percentile
-		int upper_radius_index = int(upper_shell*p->size());
-		int lower_radius_index = int(lower_shell*p->size());
-
-		sort(radii.begin(), radii.end());
-		upper_radius_cut = radii[upper_radius_index];
-		lower_radius_cut = radii[lower_radius_index];
-	} 
-	else {
-		// cut on percentage of radius
-		upper_radius_cut = radius*upper_shell;
-		lower_radius_cut = radius*lower_shell;
-	}
-
-	double r; 
-	for ( int i = 0 ; i < p->size() ; i++){
-		r = sqrt( pow((*p)[i][0],2) + pow((*p)[i][1], 2)) ;
-		if ( r <= upper_radius_cut && r >= lower_radius_cut ){
-			coord = {(*p)[i][0], (*p)[i][1]} ;
-			p_new->push_back(coord);
-		}
-	
-	}
-	
-	return p_new;
-
-}
-
-
-
-
 
 
 

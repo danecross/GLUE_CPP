@@ -27,10 +27,10 @@ double r(double theta, double a, double b, double alpha){
 }
 
 
-std::vector<std::vector<double> >* ellipse_cut ( std::vector<std::vector<double> >* p, std::vector<double> lower_ellipse, std::vector<double> upper_ellipse){
+void ellipse_cut ( std::vector<std::vector<double> >* res, std::vector<std::vector<double> >* p, std::vector<double> lower_ellipse, std::vector<double> upper_ellipse){
 
-	std::vector<std::vector<double> >* cut_pos;
 	double a_lower, b_lower, alpha_lower, a_upper, b_upper, alpha_upper;
+	std::vector<std::vector<double> > p_new;
 	
 	a_lower = lower_ellipse[0] ; b_lower = lower_ellipse[1] ; alpha_lower=0;
 	a_upper = upper_ellipse[0] ; b_upper = upper_ellipse[1] ; alpha_upper=0;
@@ -38,20 +38,23 @@ std::vector<std::vector<double> >* ellipse_cut ( std::vector<std::vector<double>
 	if (lower_ellipse.size() == 3){alpha_lower = lower_ellipse[2];}
 	if (upper_ellipse.size() == 3){alpha_upper = upper_ellipse[2];}
 
-	double radius, theta;
+	double radius, lower_radius, upper_radius, theta;
 	for ( auto coord : *p ){
 		radius = sqrt(pow(coord[0], 2) + pow(coord[1], 2));
 		
-		if (coord[0] != 0){theta = atan(coord[1]/coord[0]);}
+		if (coord[1] != 0){theta = atan(coord[1]/coord[0]);}
+		else if (coord[0] == 0){theta = M_PI/2;}
 		else {theta = 0;}
-		
-		if (r(theta, a_lower, b_lower, alpha_lower) < radius
-			&& r(theta, a_upper, b_upper, alpha_upper) > radius)
-			cut_pos->push_back(coord);
+	
+		lower_radius = r(theta, a_lower, b_lower, alpha_lower);
+		upper_radius = r(theta, a_upper, b_upper, alpha_upper);
 
+		if (lower_radius < radius && upper_radius > radius){
+				p_new.push_back(coord);
+		}
 	}
 
-	return cut_pos;
+	*res = p_new;
 
 }
 

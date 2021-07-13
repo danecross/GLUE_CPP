@@ -1,7 +1,7 @@
 
 CC = g++
 CFLAGS = -g 
-INCL = -I../include/ -I/usr/local/bin/eigen
+INCL = -I../include/ -I/N/u/dncross/BigRed3/eigen
 LIBS = --std=c++17
 
 DEPS = ../lib/axis_convergence.o ../lib/ellipse_functions.o ../lib/helpers.o ../lib/constant_density_shells.o 

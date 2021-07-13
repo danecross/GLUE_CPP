@@ -1,4 +1,4 @@
-#define DEBUG
+//#define DEBUG
 
 #include <string>
 #include <vector>
@@ -60,13 +60,12 @@ int main(){
         std::cout << "DONE" << std::endl;
 	std::cout << "ellipse cut..." ;
 #endif	
-	std::cout << std::endl;
 	/* test ellipse cut */
-	std::vector<std::vector<double> > pos; std::vector<double> lower_ellipse, upper_ellipse;	
-	pos = {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}}; lower_ellipse = {1, 0.5, 0}; upper_ellipse = {3, 5, 0};
+	std::vector<std::vector<double> > pos, cut_result; std::vector<double> lower_ellipse, upper_ellipse;	
+	
+	pos = {{0, 0}, {0, 1}, {0, 2}, {0, 3}, {0, 4}}; lower_ellipse = {1, 0.5, 0}; upper_ellipse = {10, 5, 0};
+	ellipse_cut(&cut_result, &pos, lower_ellipse, upper_ellipse);
 
-	auto cut_result = *ellipse_cut(&pos, lower_ellipse, upper_ellipse);
-	std::cout << "here3" << std::endl;
 	if(cut_result.size() != 4){print_error_message("ellipse cut", 4, cut_result.size());}
 
 #ifdef DEBUG

@@ -32,18 +32,22 @@ std::vector<double> linspace(double start, double end, int num)
 }
 
 
-std::vector<std::vector<double> >* cartesian_product( std::vector<double> x, std::vector<double> y){
+void cartesian_product( std::vector<std::vector<double> >* res, std::vector<double> x, std::vector<double> y){
 
-        std::vector<std::vector<double> >* p ; std::vector<double> coord;
+	res->clear();
+
+        std::vector<std::vector<double> > p ; std::vector<double> coord;
         for ( int i = 0 ; i < x.size() ; ++i){
                 for (int j = 0 ; j < y.size() ; ++j){
                         coord.push_back(x[i]) ; coord.push_back(y[j]);
-                        p->push_back(coord);
+                        p.push_back(coord);
                         coord.clear();
                 }
         }
 
-        return p;
+	for ( auto c : p){
+		res->push_back(c);
+	}
 
 }
 

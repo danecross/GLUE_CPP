@@ -13,29 +13,6 @@
 #include "constant_density_shells.h"
 #include "helpers.h"
 
-
-int test_get_stars(){
-
-	std::vector<std::vector<double> > p = {{0, 1}, {0, 2}, {0, 3}, {0, 4}};
-        std::vector<std::vector<double> >* p_new;
-	auto p_ptr = &p;
-
-        // test null selection
-        p_new = get_stars(p_ptr);
-        if (p_new->size() != 4 ){print_error_message("get_stars null selection", 4, p_new->size());}
-
-        // test shell selection
-        p_new = get_stars(p_ptr, 0.0, 0.4);
-        if (p_new->size() != 2) { print_error_message("get_stars, shell selection (basic)", 2, p_new->size());}
-
-        // test shell selection with half-mass-radius
-        p_new = get_stars(p_ptr, 0.0, 0.5, 10);
-        if (p_new->size() != 4){print_error_message("get_stars, shell selection w/ hmr", 4, p_new->size()); return 0;}
-
-	return 1;
-
-}
-
 int test_rotate_vector(){
 
 	Eigen::VectorXd rotated_vector(2), v(2);
@@ -96,14 +73,15 @@ int test_iterate(){
 	// generate random distribution
 	double a = 10.0 ; double b = 5.0 ;
 	std::vector<double> low, up; low = {0.1, 0.1} ; up = {a, b};
-	std::vector< std::vector<double> >* p = create_const_shell(low, up, 5000);
+	std::vector< std::vector<double> > p; 
+	create_const_shell(&p, low, up, 5000);
 
 	// run iterate
-	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver = iterate(p);
+	Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver = iterate(&p);
 	auto evals = solver.eigenvalues();
 	double M1(evals(0)), M2(evals(1));
 
-	save_coords(p, solver, "final");
+	save_coords(&p, solver, "final");
 
 	// expected ratio
 	if (abs(sqrt(M1/M2)-b/a) > 0.01){
@@ -117,7 +95,6 @@ int main() {
 	
 
 	int res = 0;
-	res += test_get_stars();
 	res += test_rotate_vector();
 	res += test_rotate_evecs();
 	res += test_rotate_coords();
