@@ -17,7 +17,7 @@ int test_const_box(){
 	auto num = *max_element(std::begin(box), std::end(box));
 	
 	if (abs(num[0]-7.5) < 0.5 && abs(num[1]-7.5) < 0.5){
-		std::ofstream saveCoords("cds_data_and_plots/const_box_coords.csv");
+		std::ofstream saveCoords("cds_data_and_plots/data/const_box_coords.csv");
 		for ( auto coord : box ){
 			saveCoords << coord[0] << "," << coord[1] << std::endl;
 		}
@@ -65,7 +65,7 @@ int test_const_shell(){
 	if (EXCEEDS_UPPER_RADIUS)
 		print_error_message("constant shell: upper radius", "below "+std::to_string(r_exp_u), std::to_string(r_u));
 	
-	std::ofstream saveCoords("cds_data_and_plots/const_shell_coords.csv");
+	std::ofstream saveCoords("cds_data_and_plots/data/const_shell_coords.csv");
         for ( auto coord : shell ){
         	saveCoords << coord[0] << "," << coord[1] << std::endl;
         }
@@ -87,7 +87,7 @@ int test_shell_fit(){
         std::vector< std::vector<double> > p;
 	create_const_shell(&p, low, up, 5000);
 
-	auto result = shell_fit(&p, low, 5.0);
+	auto result = shell_fit(&p, low, 5.0, 20);
 
 	save_coords(&p, low, result, "final");
 

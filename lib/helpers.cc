@@ -52,15 +52,15 @@ void cartesian_product( std::vector<std::vector<double> >* res, std::vector<doub
 }
 
 
-void save_coords(std::vector<std::vector<double> >* p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string name){
+void save_coords(std::vector<std::vector<double> >* p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string c_name, std::string e_name){
 
-	std::ofstream saveCoords("basic_data_and_plots/data/coords_"+name+".csv");
+	std::ofstream saveCoords(c_name);
         for ( auto coord : *p ){
                 saveCoords << coord[0] << ", " << coord[1] << std::endl;
         }   
         saveCoords.close();
 
-        std::ofstream saveEig("basic_data_and_plots/data/eigenresults_"+name+".csv");
+        std::ofstream saveEig(e_name);
         saveEig << "eigenvalues: " << solver.eigenvalues() << std::endl;
         saveEig << "eigenvectors: " << solver.eigenvectors() << std::endl;
         saveEig.close();

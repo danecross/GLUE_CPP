@@ -13,7 +13,7 @@ std::vector<double> linspace(double start_in, double end_in, int num_in);
 void cartesian_product( std::vector<std::vector<double> >*res, std::vector<double> x, std::vector<double> y);
 
 // debugging
-void save_coords(std::vector<std::vector<double> >* p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string name);
+void save_coords(std::vector<std::vector<double> >* p, Eigen::SelfAdjointEigenSolver<Eigen::MatrixXd> solver, std::string c_name, std::string e_name);
 void save_coords(std::vector<std::vector<double> >* p, std::vector<double> lower_ellipse, std::vector<double> upper_ellipse, std::string name);
 
 // error message printing

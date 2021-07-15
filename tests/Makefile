@@ -1,8 +1,8 @@
 
 CC = g++
-CFLAGS = -g 
+CFLAGS = -g -pthread
 INCL = -I../include/ -I/N/u/dncross/BigRed3/eigen
-LIBS = --std=c++17
+LIBS = --std=c++11
 
 DEPS = ../lib/axis_convergence.o ../lib/ellipse_functions.o ../lib/helpers.o ../lib/constant_density_shells.o 
 EXEC = test_basic test_cds test_ellipse_functions

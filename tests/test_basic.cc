@@ -81,7 +81,7 @@ int test_iterate(){
 	auto evals = solver.eigenvalues();
 	double M1(evals(0)), M2(evals(1));
 
-	save_coords(&p, solver, "final");
+	save_coords(&p, solver, "basic_data_and_plots/data/coords_final.csv", "basic_data_and_plots/data/eigenresults_final.csv");
 
 	// expected ratio
 	if (abs(sqrt(M1/M2)-b/a) > 0.01){
