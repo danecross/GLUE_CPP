@@ -4,7 +4,7 @@ from plotting_aid import plot_axes_from_evecs_2D
 import os
 import csv
 from matplotlib import pyplot as plt
-stylesheet = "../../../../default_stylesheet.mplstyle"
+stylesheet = "../../../default_stylesheet.mplstyle"
 plt.style.use(stylesheet)
 
 def plot_coords(file_name):
